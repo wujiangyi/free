@@ -1,0 +1,24 @@
+name: Merge upstream branches
+on:
+  push:
+  schedule:
+     # actually, ~5 minutes is the highest
+     # effective frequency you will get
+    - cron: "0 * * * *"
+jobs: 
+  merge: 
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v2
+      - name: Merge upstream
+        run: |
+          git config --global user.email "wujiangyi@ms.com"
+          git config --global user.name "wjy1985249"
+          git pull --unshallow
+          git remote add upstream https://github.com/freefq/free.git
+          git fetch upstream
+          git checkout master
+          git merge --no-edit upstream/master
+          git push origin master
+          git fetch upstream --tags
+          git push --tags
